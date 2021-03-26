@@ -6,41 +6,42 @@
     <input type="password" placeholder="Password" v-model="password" />
     <button @click="signUp">Register</button>
     <p>
-      Do you have an account?
-      <router-link to="/signin">sign in now!!</router-link>
+      <!-- <router-link to="/signin">sign in here</router-link> -->
     </p>
   </div>
 </template>
 
 <script>
-// import firebase from "@/plugins/firebase";
-// export default {
-//   name: "Signup",
-//   data() {
-//     return {
-//       email: "",
-//       password: "",
-//       user: null,
-//     };
-//   },
-//   methods: {
-//     signUp: function () {
-//       firebase
-//         .auth()
-//         .createUserWithEmailAndPassword(this.email, this.password)
-//         .then((user) => {
-//           alert("Create account!");
-//           let newUser = {
-//             uid: user.user.uid,
-//             email: this.email,
-//           };
-//         })
-//         .catch((error) => {
-//           alert(error.message);
-//         });
-//     },
-//   },
-//};
+import axios from "axios";
+export default {
+  data() {
+    return {
+      name: "",
+      email: "",
+      password: "",
+      uid: "",
+      access_token: "",
+    };
+  },
+  methods: {
+    signUp() {
+      axios
+        .post("http://localhost:3000/api/auth/", {
+          email: this.email,
+          password: this.password,
+        })
+        .then((response) => {
+          localStorage.setItem(
+            "access-token",
+            response.headers["access-token"]
+          );
+          localStorage.setItem("uid", response.headers["uid"]);
+          this.access_token = response.headers["access-token"];
+          this.uid = response.headers["uid"];
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
